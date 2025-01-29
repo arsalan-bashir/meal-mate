@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/f1e37334f6.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/css/sections.css' %}">
+      <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <title>Update Menu</title>
+    <style>
+      
+    </style>
+  </head>
+  <body>
+    {% csrf_token %}
+    <div class="container">
+      <div class="header">
+          <h1>Update {{restaurant.name}} Menu</h1>
+      </div>
+      {% include 'delivery/partials/nav.html' %}
+      <div class="main menu-main">
+        <div class="menu-container">
+          {% for item in menu %}
+          <div class="menu-item up-card">
+                <div class="menu-name"><h4>{{item.name}}</h4></div>
+                <div class="menu-price"><p>{{item.price}}</p></div>
+                <div class="menu-img"><img src="{{item.picture}}" alt="Picture of {{ item.name }}" /></div>
+                {% if item.type == "Veg" %}
+                <div class="veg-outline menu-type">
+                    <div class="veg-symbol"></div>
+                </div>
+                {% elif item.type == "Non Veg" %}
+                <div class="menu-type nonveg-outline">
+                    <div class="triangle"></div>
+                </div>
+                {% else %}
+                <div class="menu-type">
+                    N/A
+                </div>
+                {% endif %}
+                <div class="menu-desc"><p>{{item.description}}</p></div>
+                    <form action="{% url 'edit_item' item.id %}" class="menu-card-btn menu-edit-btn">
+                      {% csrf_token %}
+                        <button type="submit"><i class="fa-solid fa-pen-to-square fa-2xl" style="color: #63E6BE;"></i></button>
+                    </form>
+                    <form  method="post" action="{% url 'delete_item' item.id %}" class="menu-card-btn menu-dlt-btn">
+                      {% csrf_token %}  
+                        <button type="submit" onclick="return confirm('Do you want to delete Item: {{item.name}}?')">
+                            <i class="fa-solid fa-trash fa-2xl" style="color: #f0195a;"></i></button>
+                    </form>
+                
+          </div>
+          {% endfor %}
+          <a href="{% url 'add_item_page' restaurant.id %}" class="menu-item add-box">
+            <i class="fa-solid fa-plus fa-2xl" style="color:rgb(69, 7, 255);"></i>
+            <h3>ADD ITEM</h3>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

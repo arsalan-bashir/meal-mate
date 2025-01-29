@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/css/sections.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <title>Add Item</title>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Add Item</h1>
+        </div>
+        {% include 'delivery/partials/nav.html' %}
+        <div class="main add-main">
+            <div class="add-container">
+                <form action="{% url 'handle_add_item' restaurant.id %}" method="post" enctype="multipart/form-data" class="form-container">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="item-name">Item Name:</label>
+                        <input type="text" id="item-name" name="item-name" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="item-price">Item Price:</label>
+                        <input type="number" id="item-price" name="item-price" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="item-type">Item Type:</label>
+                        <select name="item-type" id="item-type" required>
+                            <option value="Veg">Veg</option>
+                            <option value="Non Veg">Non Veg</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="item-description">Item Description:</label>
+                        <input type="text" id="item-description" name="item-description" required>
+                      </div>
+                    <div class="form-group img-group">
+                        <img class="preview-res-logo" id="preview-logo" src="{% static 'delivery/saved/no-img.jpg' %}" alt="Logo goes here"></img>
+                        <div class="img-input-group">
+                              <label for="item-photo">Item Picture:</label>
+                              <input type="file" id="item-photo" name="item-photo" accept="image/*" onchange="updateImage(event)" required>
+                          </div>
+                      </div>
+                      <div class="form-submit">
+                        <button type="submit">Add Item</button>
+                        
+                      </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+    {% include 'delivery/partials/footer.html' %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+	if(document.getElementById('item-photo') != null) {
+	document.getElementById('item-photo').addEventListener('change', function (event) {
+	  const file = event.target.files[0];
+	  if (file) {
+		const reader = new FileReader();
+		reader.onload = function (e) {
+		  document.getElementById('preview-logo').src = e.target.result;
+		};
+		reader.readAsDataURL(file);
+	  }
+	});
+  }});
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/css/sections.css' %}">
+    <script src="https://kit.fontawesome.com/f1e37334f6.js" crossorigin="anonymous"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <title>Checkout</title>
+  </head>
+  <body>
+
+    {% if error %}
+      <p style="color: red;">{{ error }}</p>
+    {% else %}
+    <div class="container">
+      <div class="header">
+          <h1>Checkout</h1>
+      </div>
+      {% include 'delivery/partials/user-nav.html' %}
+      <div class="main menu-main">
+        <div class="checkout-container">
+            <div class="checkout-summary cart-summary">
+                <div class="checkout-content">
+                  {% for item in cart %}
+                  <p>{{item.name}}</p>
+                  {% endfor %}
+                </div>
+                <div class="payment-info">
+                    <div><p>Item Total: </p><p class="cart-price">{{ item_price }}</p></div>
+                    <div><p>Service Charges: </p><p class="cart-price">{{ additional_charges }}</p></div>
+                    <div><p>Delivery Charges: </p><p class="cart-price">{{ 10 }}</p></div>
+                    <hr>
+                    <div><p>Grand Total: </p><p class="cart-price">{{ total_price }}</p></div>
+                </div>
+                <button id="rzp-button" class="payment-btn"><i class="fa-solid fa-wallet fa-xl"></i> &nbsp;&nbsp;<span>{{ total_price }}</span></button>
+            </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% include 'delivery/partials/footer.html' %}
+  <script>
+    var options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": "{{ total_price|floatformat:2|add:'0.00'|floatformat:2 }}00",
+            "currency": "INR",
+            "name": "Meal Mate",
+            "description": "Order Payment",
+            "order_id": "{{ order_id }}",  // Razorpay order ID
+            "handler": function (response) {
+                alert("Payment Successful!");
+                // Redirect to the orders page
+                window.location.href = "{% url 'order' %}";
+            },
+            "prefill": {
+                "name": "{{ customer.name }}",
+                "email": "{{ customer.email }}",
+                "contact": "{{ customer.phone }}"
+            },
+            "theme": {
+                "color": "#528FF0"
+            }
+        };
+
+    var rzp = new Razorpay(options);
+
+    document.getElementById('rzp-button').onclick = function(e) {
+        rzp.open();
+        e.preventDefault();
+    }
+  </script>
+  </body>
+</html>

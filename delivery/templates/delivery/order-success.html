@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/css/sections.css' %}">
+    <script src="https://kit.fontawesome.com/f1e37334f6.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <title>Order Success</title>
+  </head>
+  <body>
+    {% csrf_token %}
+    <div class="container">
+      <div class="header">
+          <h1>Order Summary</h1>
+      </div>
+      {% include 'delivery/partials/user-nav.html' %}
+      <div class="main menu-main">
+        <div class="success-container checkout-container">
+            <h1>Thank you for your order, {{ customer.name }}!</h1>
+            <h3>Delivery Address</h3>
+            <p>{{ customer.address }}</p>
+
+            <p>Your order will be delivered to this location shortly. Thank you for choosing Meal Mate!</p>
+            <a href="{% url 'user_dashboard' %}"> HOME</a>
+        </div>
+      </div>
+    </div>
+  {% include 'delivery/partials/footer.html' %}
+  </body>
+</html>

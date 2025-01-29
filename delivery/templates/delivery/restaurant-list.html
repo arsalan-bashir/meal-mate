@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/f1e37334f6.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/css/sections.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <title>View Restaurants</title>
+</head>
+<body>
+    {% csrf_token %}
+    <div class="container">
+        <div class="header">
+            <h1>All Restaurants</h1>
+        </div>
+        {% include 'delivery/partials/nav.html' %}
+        <div class="main view-main">
+            <div class="view-container">
+               {% for restaurant in restaurants %}
+                <table class="res-table">
+                    <tbody>
+                        <tr class="img-item">
+                            <td rowspan="5" class="col-1">
+                                <img src="{{ restaurant.picture }}" alt="Picture of {{ restaurant.name }}" />
+                            </td>
+                            <td class="col-2"><strong> {{ restaurant.name }}</strong></td>
+                            <td rowspan="5" class="col-3 button-cell">
+                                <form action="{% url 'restaurant_menu' restaurant.id %}">
+                                    <button type="submit" class="res-btn">Menu</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-2"><i class="fa-solid fa-utensils fa-bounce" style="color: #FFD43B;"></i><span> {{ restaurant.cuisine }}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-2"><i class="fa-solid fa-star fa-beat-fade" style="color: #FFD43B;"></i> <span>{{ restaurant.rating }}</span></td>
+                        </tr>
+                        <tr class="additional-row">
+                            <td class="col-2"><i class="fa-solid fa-phone fa-shake" style="color: #FFD43B;"></i> <span>{{ restaurant.phone }}</span></td>
+                        </tr>
+                        <tr class="additional-row">
+                            <td class="col-2"><i class="fa-solid fa-location-dot fa-bounce" style="color: #FFD43B;"></i> <span>{{ restaurant.address }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% include 'delivery/partials/footer.html' %}
+</body>
+</html>

@@ -1,0 +1,42 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.index),
+    path('user-index/', views.user_index, name='user_index'),
+    path('handle_signin/', views.handle_signin, name='handle_signin'),
+    path('handle_signup/', views.handle_signup, name='handle_signup'),
+    path('logout/', views.logout, name="logout"),
+    path('res_dashboard', views.res_dashboard, name='res_dashboard'),
+    path('add_restaurant_page/', views.add_restaurant_page, name='add_restaurant_page'),
+    path('handle_add_restaurant', views.handle_add_restaurant, name="handle_add_restaurant"),
+    path('show_restaurants/', views.show_restaurants, name='show_restaurants'),
+    path('restaurant_menu/<int:restaurant_id>', views.restaurant_menu, name="restaurant_menu"),
+    path('restaurant_menu/<int:restaurant_id>/add_item',views.add_item_page, name="add_item_page"),
+    path('restaurant_menu/<int:restaurant_id>/handle_add_item',
+         views.handle_add_item, name="handle_add_item"),
+    path('update_restaurants', views.update_restaurants, name="update_restaurants"),
+    path('update_restaurants/edit_restaurant/<int:restaurant_id>',
+         views.edit_restaurant, name='edit_restaurant'),
+    path('update_restaurants/<int:restaurant_id>/delete_restaurant',
+         views.delete_restaurant, name='delete_restaurant'),
+    path('update_restaurants/edit_restaurant/<int:restaurant_id>/edit_details',
+         views.handle_edit_restaurant, name='handle_edit_restaurant'),
+    path('update_restaurants/update_menu/<int:restaurant_id>',
+         views.update_menu, name='update_menu'),
+    path('update_restaurants/update_menu/<int:menu_id>/edit_item',
+         views.edit_item, name='edit_item'),
+    path('update_restaurants/update_menu/<int:menu_id>/handle_edit_item',
+         views.handle_edit_item, name='handle_edit_item'),
+    path('update_restaurants/update_menu/<int:menu_id>/delete_item',
+         views.delete_item, name='delete_item'),
+
+    path('user_dashboard', views.user_dashboard, name='user_dashboard'),
+    path('view_restaurants/', views.view_restaurants, name='view_restaurants'),
+    path('view_restaurants/<int:restaurant_id>/view_menu', views.view_menu, name='view_menu'),
+    path('cart/', views.open_cart, name='open_cart'),
+    path('view_restaurants/view_menu/<int:menu_id>/add_to_cart', views.add_to_cart, name='add_to_cart'),
+    path('cart/checkout', views.checkout, name='checkout'),
+    path('order/', views.order, name='order'),
+
+]

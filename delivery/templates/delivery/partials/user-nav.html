@@ -1,0 +1,31 @@
+<aside class="nav">
+    <div class="profile">
+        <h4>Admin: </h4>
+        <a href="{% url 'user_dashboard' %}"><div>{{cus_name}}</div></a>
+    </div>
+    <ul>
+        <li class="nav-item {% if '/view_restaurants' in request.path %}active{% endif %}">
+            <a href="{% url 'view_restaurants' %}" class="nav-link"> Restaurant</a>
+        </li>
+        <li class="nav-item {% if '/search_restaurants' in request.path %}active{% endif %}">
+          <a href="{#% url 'search_restaurants' %#}" class="nav-link">Search Restaurant</a>
+        </li>
+        <li class="nav-item {% if request.resolver_match.url_name == 'open_cart' %}active{% endif %}">
+            <a href="{% url 'open_cart' %}" class="nav-link">Cart
+
+                {% if '/view_menu' in request.path or '/cart' in request.path and '/checkout' not in request.path %}
+                    <div class="cart-notification">
+                        {% if cart.items.count > 0 %}
+                            <h5>{{ cart.items.count }}</h5>
+                        {% else %}
+                            <h5>0</h5>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+        </li>
+    </ul>
+</aside>

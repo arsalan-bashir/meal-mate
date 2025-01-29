@@ -1,0 +1,23 @@
+<aside class="nav">
+    <div class="profile">
+        <h4>Admin: </h4>
+        <a href="{% url 'res_dashboard' %}"><div>{{cus_name}}</div></a>
+    </div>
+        <ul>
+            <li class="nav-item {% if request.resolver_match.url_name == 'add_restaurant_page' %}active{% endif %}">
+              <a href="{% url 'add_restaurant_page' %}" class="nav-link">Add Restaurant</a>
+            </li>
+            <li class="nav-item {% if '/show_restaurants' in request.path %}active{% endif %}">
+              <a href="{% url 'show_restaurants' %}" class="nav-link">View Restaurants</a>
+            </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'search_restaurant' %}active{% endif %}">
+              <a href="#" class="nav-link">Search Restaurant</a>
+            </li>
+            <li class="nav-item {% if '/update_restaurants' in request.path %}active{% endif %}">
+              <a href="{% url 'update_restaurants' %}" class="nav-link">Update Restaurant</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+            </li>
+        </ul>
+</aside>

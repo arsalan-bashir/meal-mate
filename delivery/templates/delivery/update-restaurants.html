@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/f1e37334f6.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/css/sections.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <title>Update Restaurants</title>
+</head>
+<body>
+    {% csrf_token %}
+    <div class="container">
+        <div class="header">
+            <h1>Update Restaurants</h1>
+        </div>
+        {% include 'delivery/partials/nav.html' %}
+        <div class="main view-main">
+            <div class="view-container">
+               {% for restaurant in restaurants %}
+                <table class="res-table">
+                    <tbody>
+                        <tr class="img-item">
+                            <td rowspan="5" class="col-1">
+                                <img src="{{ restaurant.picture }}" alt="Picture of {{ restaurant.name }}" />
+                            </td>
+                            <td class="col-2"><strong> {{ restaurant.name }}</strong></td>
+                            <td rowspan="5" class="update-cell">
+                                <div class="update-action">
+                                    <form action="{% url 'edit_restaurant' restaurant.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="update-btn edit-btn">Edit</button>
+                                    </form>
+                                    <form action="{% url 'update_menu' restaurant.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="update-btn menu-btn">Menu</button>
+                                    </form>
+                                    <form action="{% url 'delete_restaurant' restaurant.id %}"  method="post">
+                                        {% csrf_token %}
+                                        <button onclick="return confirm('Do you want to delete the restaurant: {{ restaurant.name }}?')"
+                                        type="submit" class="update-btn del-btn">Delete</button>
+                                    </form>
+                                <div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-2"><i class="fa-solid fa-utensils fa-bounce" style="color: #FFD43B;"></i><span> {{ restaurant.cuisine }}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-2"><i class="fa-solid fa-star fa-beat-fade" style="color: #FFD43B;"></i> <span>{{ restaurant.rating }}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-2"><i class="fa-solid fa-phone fa-shake" style="color: #FFD43B;"></i> <span>{{ restaurant.phone }}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="col-2"><i class="fa-solid fa-location-dot fa-bounce" style="color: #FFD43B;"></i> <span>{{ restaurant.address }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% include 'delivery/partials/footer.html' %}
+</body>
+</html>
