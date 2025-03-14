@@ -43,10 +43,40 @@ class Menu(models.Model):
 
 class Cart(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='cart')
-    items = models.ManyToManyField(Menu, related_name='carts')
+    items = models.ManyToManyField(Menu, through="CartItem", related_name='carts')
+
+    def add_item(self, menu_item):
+        cart_item, created = CartItem.objects.get_or_create(cart=self, item=menu_item)
+        if not created:
+            cart_item.quantity += 1
+        cart_item.save()
+
+    def clear_cart(self):
+        try:
+            self.cartitem_set.all().delete()
+        except CartItem.DoesNotExist:
+            pass
+
+    def update_item(self, menu_item, quantity):
+        cart_item = CartItem.objects.get(cart=self, item=menu_item)
+
+        # Decrease Quantity
+        if quantity == 0:
+            try:
+                    if cart_item.quantity > 1:
+                        cart_item.quantity -= 1
+                        cart_item.save()
+                    else:
+                        cart_item.delete()
+
+            except CartItem.DoesNotExist:
+                pass
+        elif quantity == 1:
+            cart_item.quantity += 1
+            cart_item.save()
 
     def total_price(self):
-        return sum(item.price for item in self.items.all())
+        return sum(cart_item.item_total() for cart_item in self.cartitem_set.all())
 
     def additional_charges(self):
         return self.total_price() * 0.05
@@ -58,5 +88,15 @@ class Cart(models.Model):
         return f"{self.customer.name} | {self.items.count()} | {self.total_price()}"
 
 
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    item = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def item_total(self):
+        return self.quantity * self.item.price
+
+    def __str__(self):
+        return f"{self.item.name} | {self.item.restaurant.name} | {self.quantity} | {self.item.price}"
 
 

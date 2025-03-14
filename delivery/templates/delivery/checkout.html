@@ -24,11 +24,11 @@
         <div class="checkout-container">
             <div class="checkout-summary cart-summary">
                 <div class="checkout-content">
-                  {% for item in cart %}
-                  <p>{{item.name}}</p>
+                  {% for cart_item in cart_items %}
+                  <p>{{ cart_item.item.name }} x {{ cart_item.quantity }}</p>
                   {% endfor %}
                 </div>
-                <div class="payment-info">
+                <div class="payment-info ch-py-info">
                     <div><p>Item Total: </p><p class="cart-price">{{ item_price }}</p></div>
                     <div><p>Service Charges: </p><p class="cart-price">{{ additional_charges }}</p></div>
                     <div><p>Delivery Charges: </p><p class="cart-price">{{ 10 }}</p></div>

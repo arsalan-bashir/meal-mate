@@ -2,6 +2,8 @@ import os
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import HttpResponse
+from razorpay.resources import item
+
 from delivery.models import Customer, Restaurant, Menu, Cart
 import cloudinary
 import cloudinary.uploader
@@ -367,10 +369,22 @@ def add_to_cart(request, menu_id):
     customer = get_object_or_404(Customer, id=request.session.get('customer_id'))
     item = get_object_or_404(Menu, id=menu_id)
 
-    cart, created = Cart.objects.get_or_create(customer=customer)
-    cart.items.add(item)
+    cart, _ = Cart.objects.get_or_create(customer=customer)
+    cart.add_item(item)
 
     return redirect('view_menu', restaurant_id = item.restaurant.id)
+
+def update_cart(request, item_id, quantity):
+    if not request.session.get('customer_id'):
+        return redirect('user_index')
+
+    customer = get_object_or_404(Customer, id=request.session.get('customer_id'))
+    cart = get_object_or_404(Cart, customer=customer)
+    cart_item = get_object_or_404(Menu, id=item_id)
+    cart.update_item(cart_item, quantity)
+
+    return redirect('open_cart')
+
 
 
 def checkout(request):
@@ -379,9 +393,10 @@ def checkout(request):
 
     customer = get_object_or_404(Customer, id=request.session.get('customer_id'))
     cart = get_object_or_404(Cart, customer=customer)
+    cart_items = cart.cartitem_set.all()
     if cart:
         items = cart.items.all()
-        if cart:
+        if items:
             item_price = cart.total_price()
             additional_charges = cart.additional_charges()
             grand_total = item_price + additional_charges
@@ -408,6 +423,7 @@ def checkout(request):
         'additional_charges': additional_charges,
         'total_price': grand_total,
         'razorpay_key_id': os.getenv("RAZORPAY_API_KEY"),
+        'cart_items': cart_items,
         'cart': items,
         'order_id': order['id'],
         'amount': grand_total,
@@ -421,7 +437,7 @@ def order(request):
     cart = get_object_or_404(Cart, customer=customer)
 
     if cart:
-        cart.items.clear()
+        cart.clear_cart()
 
     return render(request, 'delivery/order-success.html', {
         'customer': customer})

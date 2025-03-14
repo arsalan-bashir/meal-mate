@@ -11,11 +11,11 @@
   </head>
   <body>
     {% if messages %}
-      <script type="text/javascript">
-          {% for message in messages %}
-              alert("{{ message }}");
-          {% endfor %}
-      </script>
+      {% for message in messages %}
+          <script type="text/javascript">
+                  alert("{{ message }}");
+          </script>
+      {% endfor %}
     {% endif %}
 
     {% csrf_token %}
@@ -32,29 +32,36 @@
                     <p>No items in your cart</p>
                 </div>
                 {% endif %}
-                {% for item in cart.items.all %}
+                {% for cart_item in cart.cartitem_set.all %}
                 <div class="cart-item">
-                    <img class="cart-item-image" src="{{ item.picture }}" alt="" />
-                    {% if item.type == "Veg" %}
+                    <img class="cart-item-image" src="{{ cart_item.item.picture }}" alt="" />
+                    {% if cart_item.item.type == "Veg" %}
                     <div class="veg-outline cart-item-type">
                             <div class="veg-symbol"></div>
                     </div>
-                    {% elif item.type == "Non Veg" %}
+                    {% elif cart_item.item.type == "Non Veg" %}
                     <div class="nonveg-outline cart-item-type">
                         <div class="triangle"></div>
                     </div>
                     {% endif %}
                     <div class="cart-item-info">
-                        <h2>{{ item.name }}</h2>
-                        <h4 class="cart-price">{{ item.price }}</h4>
+                        <h2>{{ cart_item.item.name }}</h2>
+                        <h4 class="cart-price">{{ cart_item.item.price }}</h4>
                     </div>
                     <div class="cart-item-state">
                         <div class="cart-item-btn">
-                            <button class="increase-btn" ><i class="fa-solid fa-minus fa-xl" style="color: #ffffff"></i></button>
-                            <h3>1</h3>
-                            <button class="decrease-btn"><i class="fa-solid fa-plus fa-xl" style="color: #ffffff"></i></button>
+                            <form action="{% url 'update_cart' cart_item.item.id 0 %}">
+                                  {% csrf_token %}
+                                <button class="decrease-btn" type="submit"><i class="fa-solid fa-minus fa-xl" style="color: #ffffff"></i></button>
+                            </form>
+
+                            <h3>{{ cart_item.quantity }}</h3>
+                            <form action="{% url 'update_cart' cart_item.item.id 1 %}">
+                                  {% csrf_token %}
+                                <button class="increase-btn" type="submit"><i class="fa-solid fa-plus fa-xl" style="color: #ffffff"></i></button>
+                            </form>
                         </div>
-                        <h3  class="cart-price">{{ item.price }}</h3>
+                        <h3  class="cart-price">{{ cart_item.item_total }}</h3>
                     </div>
                 </div>
             {% endfor %}

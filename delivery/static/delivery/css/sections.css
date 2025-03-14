@@ -869,14 +869,15 @@ input[type="file"] {
     margin: auto;
     width: 100%;
     height: 80vh;
-    gap: 130px;
-    justify-content: center;
+    gap: 13px;
+    justify-content: space-evenly;
 }
 
 .checkout-content {
     font-size: 12px;
-    line-height: 2px;
+    line-height: 5px;
 }
+
 
 #rzp-button {
     position: absolute;
